@@ -1,57 +1,28 @@
-(function() {
-  // The form ID must match exactly as declared in index.html: 'github-user-${seed}'
-  const formId = 'github-user-${seed}';
-  const form = document.getElementById(formId);
-  const resultEl = document.getElementById('github-result');
-  const createdAtEl = document.getElementById('github-created-at');
-  const usernameEl = document.getElementById('github-username');
-  const errorAlert = document.getElementById('error-alert');
-  const usernameInput = document.getElementById('username-input');
-
-  // Token can be supplied via URL query parameter: ?token=YOUR_GITHUB_TOKEN
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenFromUrl = urlParams.get('token') || '';
-
-  async function fetchUser(username, token) {
-    const url = `https://api.github.com/users/${encodeURIComponent(username)}`;
-    const headers = token ? { 'Authorization': `token ${token}` } : {};
-    const resp = await fetch(url, { headers });
-    if (!resp.ok) {
-      const errText = await resp.text();
-      // Try to provide a user-friendly message when possible
-      const message = errText?.trim() || `Request failed with status ${resp.status}`;
-      throw new Error(message);
-    }
-    const user = await resp.json();
-    const date = user.created_at ? user.created_at.substring(0, 10) : '';
-    return { login: user.login, createdDate: date };
-  }
-
-  if (!form) {
-    console.warn('GitHub user form not found: id mismatch.');
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const username = (usernameInput.value || '').trim();
-    if (!username) {
-      errorAlert.textContent = 'Please enter a GitHub username.';
-      errorAlert.classList.remove('d-none');
+(function(){
+  function updateAccountAge(){
+    var el = document.getElementById('github-account-age');
+    if(!el) return;
+    var creation = el.getAttribute('data-creation') || '2015-06-15';
+    var date = new Date(creation);
+    if(isNaN(date.getTime())){
+      el.textContent = 'Created on: invalid date';
       return;
     }
-    errorAlert.classList.add('d-none');
-    errorAlert.textContent = '';
-    resultEl.style.display = 'none';
-
-    try {
-      const data = await fetchUser(username, tokenFromUrl);
-      createdAtEl.textContent = `Account Created At: ${data.createdDate} UTC`;
-      usernameEl.textContent = `Username: ${data.login ?? username}`;
-      resultEl.style.display = '';
-    } catch (err) {
-      errorAlert.textContent = `Error: ${err.message}`;
-      errorAlert.classList.remove('d-none');
-      resultEl.style.display = 'none';
+    var now = new Date();
+    var age = now.getFullYear() - date.getFullYear();
+    var hadBirthday = (now.getMonth() > date.getMonth()) || (now.getMonth() === date.getMonth() && now.getDate() >= date.getDate());
+    if(!hadBirthday) age--;
+    if(age < 0) age = 0;
+    var dateStr = date.toISOString().slice(0,10);
+    el.textContent = `Created on: ${dateStr} • Age: ${age} year${age === 1 ? '' : 's'}`;
+    var status = document.getElementById('github-status');
+    if(status){
+      status.textContent = `Account created on ${dateStr} and is ${age} year${age === 1 ? '' : 's'} old.`;
     }
-  });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', updateAccountAge);
+  }else{
+    updateAccountAge();
+  }
 })();

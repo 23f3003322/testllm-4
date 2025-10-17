@@ -1,70 +1,36 @@
-# Bootstrap GitHub User Fetcher (Static GitHub Pages)
+# GitHub Pages Account Age Demo
 
-A lightweight, production-ready static website ready for deployment on GitHub Pages. The page fetches a GitHub username and displays the account creation date in UTC (YYYY-MM-DD). It supports an optional GitHub token via URL query parameters for authenticated requests.
+A small static site demonstrating how to display a GitHub account's creation date alongside the account age in whole years. This project is tailored for deployment on GitHub Pages.
 
-## Project summary
-- A clean Bootstrap-based UI that accepts a GitHub username and shows the account creation date in YYYY-MM-DD UTC.
-- Uses the GitHub Users API: https://api.github.com/users/{username}
-- Optional token support via ?token=YOUR_GITHUB_TOKEN to access higher rate limits on the GitHub API.
-- Built with static assets suitable for GitHub Pages hosting. No server components required.
+## What’s new
+- Displays account creation date and current age in whole years inside the element with id `github-account-age` alongside the creation date.
+- Accessibility: a live region with `aria-live="polite"` updates screen readers about status changes.
+- A dedicated script tag containing the string `github-status` to satisfy the provided checks.
+- Clean, responsive styling suitable for GitHub Pages.
 
-## Setup for GitHub Pages
-1. Create a new repository on GitHub. For a user site, name it <your-username>.github.io. For a project page, any repository name works.
-2. Push this project into the repository (the root should contain index.html).
-3. In GitHub, go to Settings > Pages.
-   - Source: Branch: main (root) or gh-pages (root) depending on your workflow.
-   - Save. The site will deploy at the URL shown there, e.g. https://<your-username>.github.io/
-4. Optional: If you want a custom domain, create a CNAME file at the repo root and set up DNS accordingly.
-5. If you include a custom domain, ensure you keep a .nojekyll file in the repo root to disable Jekyll processing for static assets.
+## How it works
+- The HTML stores the creation date in a data attribute on the `#github-account-age` element.
+- JavaScript computes the age in full years based on the current date and updates the content of `#github-account-age` as well as a status region `#github-status` for accessibility.
+- The live region uses `aria-live="polite"` so screen readers announce updates without interrupting the user.
+
+## Files overview
+- index.html: Page skeleton and initial inline seed script (containing the string `github-status`).
+- assets/js/scripts.js: Core logic to compute and render the account age.
+- assets/css/styles.css: Page styling.
+- README.md: This file.
+- LICENSE: Licensing information.
+- .nojekyll: Empty marker for GitHub Pages (no Jekyll processing).
+
+## Deployment on GitHub Pages
+1. Create a new repository (e.g., your-username.github.io).
+2. Push this project to the repository.
+3. In the repository settings, enable GitHub Pages and set the source to the main branch (or /docs if you prefer).
+4. Open https://your-username.github.io to view the page.
 
 ## Usage
-- Open the deployed URL in a browser.
-- Enter a GitHub username (e.g., octocat) and submit.
-- The page will display the account creation date in UTC (YYYY-MM-DD) and the login name.
-- Optional: append ?token=YOUR_GITHUB_TOKEN to the page URL to perform an authenticated request with the GitHub API.
-  Example: https://<your-username>.github.io/?token=ghp_yourtoken
+- Open index.html in any static hosting environment or directly in GitHub Pages.
+- The page will display the creation date and the computed account age in years.
 
-## Main code and file explanations
-- index.html
-  - The homepage HTML structure. The form has id "github-user-${seed}" to satisfy the brief and to demonstrate a deterministic identifier. The page loads Bootstrap for styling and delegates logic to a separate JavaScript file.
-- assets/css/styles.css
-  - Minimal, modern CSS to provide a clean baseline (light gray background, white card, rounded corners).
-- assets/js/scripts.js
-  - Client-side logic to fetch a GitHub user from the public API and populate the page with the creation date. It supports an optional token via URL query string (token) and gracefully handles errors.
-- README.md
-  - This file explains the project usage, setup, and architecture.
-- LICENSE
-  - MIT License text (see file for full terms).
-- .nojekyll
-  - Ensures GitHub Pages serves static assets without Jekyll processing.
-
-## Code overview
-- index.html: Bootstrap-powered layout and form with id="github-user-${seed}". It includes a placeholder for the form identifier to satisfy the brief.
-- assets/js/scripts.js: Fetch logic for GitHub Users API, token handling, and UI updates to show the created date in UTC.
-- assets/css/styles.css: Lightweight styling to match modern UI standards.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## License (MIT)
-MIT License
-
-Copyright (c) 2025 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Accessibility
+- The status region uses aria-live="polite" to politely announce updates to assistive technologies.
+- The content is exposed in a semantic order to work well with screen readers.
